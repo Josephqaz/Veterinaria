@@ -40,6 +40,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="../servicios.php">Gestión de Servicios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../consulta-eliminar.php">Modificar y eliminar</a>
           </li> 
         </ul>
       </div>

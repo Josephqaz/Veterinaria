@@ -72,28 +72,31 @@ class Mascota {
     }
 
     public function eliminarConDependencias() {
-        $this->pdo->beginTransaction();
         try {
-            $stmt = $this->pdo->prepare("DELETE FROM HistorialesClinicos WHERE idMascota = ?");
-            if (!$stmt->execute([$this->id])) {
-                throw new Exception("Fallo al eliminar los historiales clínicos.");
-            }
+            // Inicia la transacción
+            $this->pdo->beginTransaction();
 
-            $stmt = $this->pdo->prepare("DELETE FROM Facturacion WHERE idMascota = ?");
-            if (!$stmt->execute([$this->id])) {
-                throw new Exception("Fallo al eliminar las facturas.");
-            }
+            // Elimina las dependencias (por ejemplo, registros en otras tablas que dependan de la mascota)
+            $stmt = $this->pdo->prepare("DELETE FROM recordatorios WHERE idMascota = :idMascota");
+            $stmt->bindParam(':idMascota', $this->id);
+            $stmt->execute();
 
-            $stmt = $this->pdo->prepare("DELETE FROM Mascotas WHERE idMascota = ?");
-            if (!$stmt->execute([$this->id])) {
-                throw new Exception("Fallo al eliminar la mascota.");
-            }
+            // Elimina las dependencias (por ejemplo, registros en otras tablas que dependan de la mascota)
+            $stmt = $this->pdo->prepare("DELETE FROM historialesclinicos WHERE idMascota = :idMascota");
+            $stmt->bindParam(':idMascota', $this->id);
+            $stmt->execute();
 
+            // Elimina la mascota
+            $stmt = $this->pdo->prepare("DELETE FROM Mascotas WHERE idMascota = :idMascota");
+            $stmt->bindParam(':idMascota', $this->id);
+            $stmt->execute();
+
+            // Confirma la transacción
             $this->pdo->commit();
             return true;
         } catch (Exception $e) {
+            // Si ocurre un error, revierte la transacción
             $this->pdo->rollBack();
-            error_log("Error al eliminar mascota y dependencias: " . $e->getMessage());
             return false;
         }
     }

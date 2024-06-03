@@ -3,7 +3,7 @@ include 'Backend/conexion.php';
 session_start();
 // Consulta para clientes
 try {
-    $queryClientes = "SELECT idCliente, nombre FROM Clientes";
+    $queryClientes = "SELECT idCliente, nombre, apellido FROM Clientes"; // Incluye 'apellido' en la consulta
     $stmtClientes = $pdo->query($queryClientes);
     $clientes = $stmtClientes->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -13,7 +13,7 @@ try {
 
 // Consulta para mascotas
 try {
-    $queryMascotas = "SELECT idMascota, nombre FROM Mascotas";
+    $queryMascotas = "SELECT idMascota, nombre, especie FROM Mascotas"; // Incluye 'especie' en la consulta
     $stmtMascotas = $pdo->query($queryMascotas);
     $mascotas = $stmtMascotas->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -22,15 +22,36 @@ try {
 }
 ?>
 <?php include("includes/header.php") ?>
+
+<style>
+    .table td, .table th {
+        vertical-align: middle;
+    }
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
 <div class="container mt-5">
+    <!-- Lista de Clientes -->
     <div class="row">
-        <div class="col-6">
-            <h2>Clientes</h2>
-            <table class="table">
+        <div class="col-sm-6">
+            <h3>Lista de Clientes</h3>
+        </div>
+        <div class="col-sm-4 offset-2">
+            <a href="registro-cliente.php" class="btn btn-success w-100" title="Agregar nuevo cliente"><i class="bi bi-plus-circle-fill"></i> Nuevo Cliente</a>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-sm-12">
+            <table id="tblClientes" class="table table-striped">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
+                        <th>Apellido</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -39,28 +60,40 @@ try {
                         <tr>
                             <td><?= htmlspecialchars($cliente['idCliente']) ?></td>
                             <td><?= htmlspecialchars($cliente['nombre']) ?></td>
+                            <td><?= htmlspecialchars($cliente['apellido']) ?></td>
                             <td>
-                                <!-- Editar cliente -->
-                                <a href="/Backend/editar_cliente.php?id=<?= $cliente['idCliente'] ?>" class="btn btn-warning">Editar</a>
-                                <!-- Eliminar cliente -->
-                                <form action="/Backend/eliminar_cliente.php" method="post" id="formEliminarCliente-<?= $cliente['idCliente'] ?>">
-                                    <input type="hidden" name="idCliente" value="<?= $cliente['idCliente'] ?>">
-                                    <button type="button" class="btn btn-danger" onclick="confirmarEliminacion(<?= $cliente['idCliente'] ?>)">Eliminar</button>
-                                </form>
-
+                                <div class="btn-group" role="group">
+                                    <a href="/Backend/editar_cliente.php?id=<?= $cliente['idCliente'] ?>" class="btn btn-warning" title="Editar cliente"><i class="bi bi-pencil-fill"></i> Editar</a>
+                                    <button type="button" class="btn btn-danger" title="Eliminar cliente" onclick="confirmarEliminacion('cliente', <?= $cliente['idCliente'] ?>)"><i class="bi bi-trash-fill"></i> Eliminar</button>
+                                    <form action="/Backend/eliminar_cliente.php" method="post" id="formEliminarCliente-<?= $cliente['idCliente'] ?>" style="display: none;">
+                                        <input type="hidden" name="idCliente" value="<?= $cliente['idCliente'] ?>">
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-        <div class="col-6">
-            <h2>Mascotas</h2>
-            <table class="table">
+    </div>
+
+    <!-- Lista de Mascotas -->
+    <div class="row mt-5">
+        <div class="col-sm-6">
+            <h3>Lista de Mascotas</h3>
+        </div>
+        <div class="col-sm-4 offset-2">
+            <a href="registro-mascota.php" class="btn btn-success w-100" title="Agregar nueva mascota"><i class="bi bi-plus-circle-fill"></i> Nueva Mascota</a>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-sm-12">
+            <table id="tblMascotas" class="table table-striped">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
+                        <th>Especie</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -69,15 +102,15 @@ try {
                         <tr>
                             <td><?= htmlspecialchars($mascota['idMascota']) ?></td>
                             <td><?= htmlspecialchars($mascota['nombre']) ?></td>
+                            <td><?= htmlspecialchars($mascota['especie']) ?></td>
                             <td>
-                                <!-- Editar mascota -->
-                                <a href="/Backend/editar_mascota.php?id=<?= $mascota['idMascota'] ?>" class="btn btn-warning">Editar</a>
-                                <!-- Eliminar mascota -->
-                                <form action="/Backend/eliminar_mascota.php" method="post" id="formEliminarMascota-<?= $mascota['idMascota'] ?>">
-                                    <input type="hidden" name="idMascota" value="<?= $mascota['idMascota'] ?>">
-                                    <button type="button" class="btn btn-danger" onclick="confirmarEliminacionMascota(<?= $mascota['idMascota'] ?>)">Eliminar</button>
-                                </form>
-
+                                <div class="btn-group" role="group">
+                                    <a href="/Backend/editar_mascota.php?id=<?= $mascota['idMascota'] ?>" class="btn btn-warning" title="Editar mascota"><i class="bi bi-pencil-fill"></i> Editar</a>
+                                    <button type="button" class="btn btn-danger" title="Eliminar mascota" onclick="confirmarEliminacion('mascota', <?= $mascota['idMascota'] ?>)"><i class="bi bi-trash-fill"></i> Eliminar</button>
+                                    <form action="/Backend/eliminar_mascota.php" method="post" id="formEliminarMascota-<?= $mascota['idMascota'] ?>" style="display: none;">
+                                        <input type="hidden" name="idMascota" value="<?= $mascota['idMascota'] ?>">
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -86,29 +119,13 @@ try {
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function confirmarEliminacion(idCliente) {
+    function confirmarEliminacion(tipo, id) {
+        let entidad = tipo === 'cliente' ? 'cliente' : 'mascota';
         Swal.fire({
-            title: '¿Está seguro?',
-            text: "No podrás revertir esto!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminar!',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Enviar el formulario de eliminación
-                document.getElementById('formEliminarCliente-' + idCliente).submit();
-            }
-        })
-    }
-</script>
-<script>
-    function confirmarEliminacionMascota(idMascota) {
-        Swal.fire({
-            title: '¿Está seguro de eliminar esta mascota?',
+            title: `¿Está seguro de eliminar este ${entidad}?`,
             text: "Esta acción no se puede revertir!",
             icon: 'warning',
             showCancelButton: true,
@@ -118,11 +135,10 @@ try {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Enviar el formulario de eliminación de la mascota
-                document.getElementById('formEliminarMascota-' + idMascota).submit();
+                console.log(`Enviando formulario para eliminar ${entidad} con ID: ${id}`);
+                document.getElementById(`formEliminar${tipo.charAt(0).toUpperCase() + tipo.slice(1)}-` + id).submit();
             }
         })
     }
 </script>
-</body>
 <?php include("includes/footer.php") ?>

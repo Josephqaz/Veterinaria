@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['idMascota'])) {
         $_SESSION['message'] = "Mascota y todas sus dependencias eliminadas con éxito.";
     } else {
         $_SESSION['message'] = "Error al eliminar la mascota y sus dependencias.";
-    }
+}
 } else {
     $_SESSION['message'] = "No se proporcionó un ID de mascota válido.";
 }

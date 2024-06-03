@@ -53,52 +53,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Mascota</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
+<?php include("../includes/header.php") ?>
 
 <body>
 <div class="container mt-5">
     <h2 class="mb-4">Editar Mascota</h2>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $mascota->id; ?>" method="POST">
         <input type="hidden" name="idMascota" value="<?php echo $mascota->id; ?>">
-        <div class="form-group">
-            <label for="nombre">Nombre</label>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="nombre" name="nombre" required value="<?php echo htmlspecialchars($nombre); ?>">
         </div>
-        <div class="form-group">
-            <label for="especie">Especie</label>
+        <div class="mb-3">
+            <label for="especie" class="form-label">Especie</label>
             <input type="text" class="form-control" id="especie" name="especie" required value="<?php echo htmlspecialchars($especie); ?>">
         </div>
-        <div class="form-group">
-            <label for="raza">Raza</label>
+        <div class="mb-3">
+            <label for="raza" class="form-label">Raza</label>
             <input type="text" class="form-control" id="raza" name="raza" required value="<?php echo htmlspecialchars($raza); ?>">
         </div>
-        <div class="form-group">
-            <label for="color">Color</label>
+        <div class="mb-3">
+            <label for="color" class="form-label">Color</label>
             <input type="text" class="form-control" id="color" name="color" value="<?php echo htmlspecialchars($color); ?>">
         </div>
-        <div class="form-group">
-            <label for="tamano">Tamaño</label>
+        <div class="mb-3">
+            <label for="tamano" class="form-label">Tamaño</label>
             <input type="text" class="form-control" id="tamano" name="tamano" value="<?php echo htmlspecialchars($tamano); ?>">
         </div>
-        <div class="form-group">
-            <label for="anoNacimiento">Año de Nacimiento</label>
+        <div class="mb-3">
+            <label for="anoNacimiento" class="form-label">Año de Nacimiento</label>
             <input type="number" class="form-control" id="anoNacimiento" name="anoNacimiento" value="<?php echo htmlspecialchars($anoNacimiento); ?>">
         </div>
         <button type="submit" class="btn btn-primary">Actualizar</button>
     </form>
 </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-
-</html>
+<?php include("../includes/footer.php") ?>
